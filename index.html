@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenAPI → Cloudflare Worker Mock Generator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OpenAPI → Cloudflare Worker Mock Generator</h1>
+            <p>Convert any OpenAPI 3.x schema into a fully functional Cloudflare Worker mock API</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Left Panel: Input -->
+            <div class="panel input-panel">
+                <h2>OpenAPI Schema</h2>
+                <textarea id="schemaInput" placeholder="Paste your OpenAPI 3.x JSON schema here...">{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sample API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "summary": "List users",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": [
+                  {"id": 1, "name": "John Doe"},
+                  {"id": 2, "name": "Jane Smith"}
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "summary": "Get user by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {"type": "integer"}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {"type": "integer"},
+                    "name": {"type": "string"},
+                    "email": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}</textarea>
+
+                <div class="options">
+                    <h3>Generation Options</h3>
+                    
+                    <div class="option-group">
+                        <label for="fallbackMode">Fallback Mode:</label>
+                        <select id="fallbackMode">
+                            <option value="basic">Basic Stub (default)</option>
+                            <option value="typed">Schema-Typed Stub</option>
+                            <option value="jsf">JSON-Schema-Faker Pre-generation</option>
+                        </select>
+                        <small>Used when no example is found in the schema</small>
+                    </div>
+
+                    <button id="generateBtn" class="btn-primary">Generate Worker</button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Detected Operations -->
+            <div class="panel operations-panel">
+                <h2>Detected Operations</h2>
+                <div id="operationsList" class="operations-list">
+                    <p class="placeholder">Generate to see detected operations...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="output-section">
+            <div class="output-panel">
+                <div class="output-header">
+                    <h2>Generated worker.js</h2>
+                    <div class="btn-group">
+                        <button class="btn-secondary" data-copy="workerCode">Copy</button>
+                        <button class="btn-secondary" data-download="worker.js">Download</button>
+                    </div>
+                </div>
+                <pre id="workerCode" class="code-output"><code>// Click "Generate Worker" to create your mock API...</code></pre>
+            </div>
+
+            <div class="output-panel">
+                <div class="output-header">
+                    <h2>Generated wrangler.toml</h2>
+                    <div class="btn-group">
+                        <button class="btn-secondary" data-copy="wranglerConfig">Copy</button>
+                        <button class="btn-secondary" data-download="wrangler.toml">Download</button>
+                    </div>
+                </div>
+                <pre id="wranglerConfig" class="code-output"><code># Click "Generate Worker" to create your configuration...</code></pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
